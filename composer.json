@@ -1,0 +1,17 @@
+{
+    "name": "schoenef/sweet-gallery",
+    "description": "A Sweet little Gallery Plugin with little function but great usability.",
+    "type": "wordpress-plugin",
+    "autoload": {
+        "psr-4": { "SweetGallery\\": "src" }
+    },
+    "authors": [
+        {
+            "name": "Andreas Schönefeldt",
+            "email": "schoenefeldt.andreas@gmail.com"
+        }
+    ],
+    "require": {
+        "twig/twig": "^3.0"
+    }
+}

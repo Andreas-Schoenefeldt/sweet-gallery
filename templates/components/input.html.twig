@@ -1,0 +1,32 @@
+{% set inputId = name %}
+{% set defaultValue = conf.default_value is defined ? conf.default_value : '' %}
+{% set val = value|default(defaultValue) %}
+
+{% set justLabelValue = conf.input == 'label' and val %}
+
+<p class="post-attributes-label-wrapper vtp-attributes-wrapper">
+
+    {% if conf.input == 'checkbox' %}
+        <input name="{{ name }}" type="{{ conf.input }}" id="{{ inputId }}" value="1"{{ value ? ' checked' : ''}}/>
+    {% endif %}
+
+    <label class="post-attributes-label" for="{{ inputId }}">{{ conf.label }}{{ justLabelValue ? ': ' ~ val  : ''}}</label>
+</p>
+
+{% if conf.input == 'select' %}
+    <select name="{{ name }}" id="{{ inputId }}">
+        {% for option in conf.options %}
+            <option value="{{ option.value }}"{{ option.value == val ? ' selected' : '' }}>{{ option.label }}</option>
+        {% endfor %}
+    </select>
+{% elseif conf.input == 'html_render' %}
+    <div class="vtp-html">
+        {{ val|raw }}
+    </div>
+{% elseif conf.input == 'html' %}
+    {{ wp_editor(val, name) | raw }}
+{% elseif justLabelValue %}
+    {# nothing ;) #}
+{%  elseif conf.input != 'checkbox' %}
+    <input name="{{ name }}" type="{{ conf.input }}" size="48" id="{{ inputId }}" value="{{ val }}"/>
+{% endif %}
