@@ -1,0 +1,5 @@
+<div>
+    {% for attributeId, conf in structure %}
+        {% include 'components/input.html.twig' with { name: attributeId, conf: conf, value: values[attributeId] } %}
+    {% endfor %}
+</div>

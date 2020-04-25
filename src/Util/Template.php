@@ -24,18 +24,14 @@ class Template {
     protected static $cssNamespace;
     protected static $jsNamespace;
 
-    public static $pluginFile;
-
-    public static function init($pluginFile) {
+    public static function init($namespace) {
 
         $cacheDir = Plugin::getCacheDirBase() . 'Templates/';
         $debug = 'debug';
         // $locale = Plugin::get_option('app_language');
 
-        self::$pluginFile = $pluginFile;
-
         // register used styles and scripts, for later use
-        self::$namespace = pathinfo($pluginFile)['filename'];
+        self::$namespace = $namespace;
         self::$cssNamespace = self::$namespace . '-' . 'style';
         self::$jsNamespace = self::$namespace . '-' . 'js';
 
@@ -117,15 +113,27 @@ class Template {
                 return  wp_editor( $content, $fieldName, [] );
             }
         ));
+
+        self::$twig->addFunction(new TwigFunction(
+            '__',
+            function ($string) {
+                return  __($string);
+            }
+        ));
+
+        self::$twig->addFunction(new TwigFunction(
+            'wp_get_attachment_image',
+            function ($attachment_id, $size = 'thumbnail', $icon = false, $attr = '') {
+                return  wp_get_attachment_image($attachment_id, $size, $icon, $attr);
+            }
+        ));
     }
 
     public static function render($template, $variables = []) {
-
         // we render? We'll let's include also the assets then ;)
         // self::includeAssets();
 
-        $template = static::$twig->load($template);
-        return $template->render($variables);
+        return self::$twig->render($template, $variables);
     }
 
     public static function includeAssets(){

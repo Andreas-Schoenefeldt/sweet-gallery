@@ -23,6 +23,18 @@
     <div class="vtp-html">
         {{ val|raw }}
     </div>
+{% elseif conf.input == 'list_image' %}
+    <div class="js-widget" data-widgets="wp-image-attachments" data-attachment_post_id="{{ attachment_post_id }}">
+        <div class="image-preview-wrapper">
+            {% for id in val|split(',') %}
+                <span class="image-preview" draggable="true" data-id="{{ id }}">
+                    {{ wp_get_attachment_image(id)| raw }}
+                </span>
+            {% endfor %}
+        </div>
+        <input type="button" class="button js-trigger--upload" value="{{ __( "Upload image" )}}"/>
+        <input type="hidden" class="js-trigger--ids" name="{{ name }}" id="{{ inputId }}" value="{{ val }}">
+    </div>
 {% elseif conf.input == 'html' %}
     {{ wp_editor(val, name) | raw }}
 {% elseif justLabelValue %}

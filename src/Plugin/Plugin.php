@@ -17,7 +17,18 @@ class Plugin {
 
     const admin_page = 'sweet-gallery-admin';
 
+    public $structure;
+
     public function __construct() {
+
+        $this->structure = [
+            // 'swg_description' => [ 'label' => __('Description'), 'input' => 'html'],
+            'swg_images' =>      [ 'label' => __('Images'), 'input' => 'list_image'] // image upload thx to https://jeroensormani.com/how-to-include-the-wordpress-media-selector-in-your-plugin/
+        ];
+
+        Template::init(self::plugin_name);
+
+
         add_action( 'init', array( $this, 'register_gallery_post_type' ) );
 
         // shortcode Area
@@ -26,11 +37,14 @@ class Plugin {
             // add_shortcode('whatever', 'fn_whatever');
         });
 
+        add_action( "admin_init", array( $this, "admin_init") );
+
         add_action( 'save_post', array( $this, "save_product_details") );
 
-        add_filter( 'manage_' . self::gallery_post_type_id . '_posts_columns', array( $this, "handle_gallery_columns") );
-        add_action( 'manage_' . self::gallery_post_type_id . '_posts_custom_column', array( $this, "custom_column_value"), 10, 2 );
-        add_action( 'manage_edit-' . self::gallery_post_type_id . '_sortable_columns', array( $this, "sortable_columns"));
+
+        // add_filter( 'manage_' . self::gallery_post_type_id . '_posts_columns', array( $this, "handle_gallery_columns") );
+        // add_action( 'manage_' . self::gallery_post_type_id . '_posts_custom_column', array( $this, "custom_column_value"), 10, 2 );
+        // add_action( 'manage_edit-' . self::gallery_post_type_id . '_sortable_columns', array( $this, "sortable_columns"));
     }
 
     public static function getCacheDirBase() {
@@ -70,7 +84,7 @@ class Plugin {
                 'rewrite' => array('slug' => 'produkte'),
                 'supports' => [
                     'title',
-                    // 'editor',
+                    'editor',
                     'thumbnail',
                     // 'custom-fields',
                     // 'page-attributes'
@@ -106,11 +120,30 @@ class Plugin {
         }
     }
 
-    public function render_product_details_box () {
+    public function admin_init () {
+        add_meta_box(
+            "box_gallery_item_details",
+            __('Gallery Images'),
+            array( $this, 'render_gallery_item_details_box' ),
+            self::gallery_post_type_id,
+            "normal",
+            "high"
+        );
+    }
+
+
+    public function render_gallery_item_details_box () {
         global $post;
+
+        // adds the image functionality
+        wp_enqueue_media();
+
+        $my_saved_attachment_post_id = get_option( 'media_selector_attachment_id', 0 );
+
         echo Template::render('admin/box_gallery_item_details.html.twig', [
             'values' => PostUtils::get_custom_data($post->ID, $this->structure),
-            'structure' => $this->structure
+            'structure' => $this->structure,
+            'attachment_post_id' => $my_saved_attachment_post_id
         ]);
     }
 

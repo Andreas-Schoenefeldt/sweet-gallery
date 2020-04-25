@@ -6,10 +6,23 @@ namespace SweetGallery\Plugin;
 
 class Admin {
 
-    public function __construct() {
+    private $pluginFile;
+
+    public function __construct($pluginFile) {
+
+        $this->pluginFile = $pluginFile;
 
         add_action( 'admin_menu', array( $this, 'add_plugin_pages' ) );
 
+        add_action( 'admin_enqueue_scripts', array( $this, 'add_admin_assets'));
+    }
+
+    public function add_admin_assets () {
+        // add the dedicated admin js
+        $jsAdminNameSpace = Plugin::plugin_name . '-scripts-admin';
+
+        wp_register_script($jsAdminNameSpace, plugins_url('assets/js/admin.js', $this->pluginFile));
+        wp_enqueue_script($jsAdminNameSpace);
     }
 
     public function add_plugin_pages() {
