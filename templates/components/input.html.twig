@@ -23,8 +23,8 @@
     <div class="vtp-html">
         {{ val|raw }}
     </div>
-{% elseif conf.input == 'list_image' %}
-    <div class="js-widget" data-widgets="wp-image-attachments" data-attachment_post_id="{{ attachment_post_id }}">
+{% elseif conf.input == 'list_image' or conf.input == 'image' %}
+    <div class="js-widget" data-widgets="wp-image-attachments" data-multi_select="{{ conf.input == 'list_image' ? 'true' : 'false' }}" data-attachment_post_id="{{ attachment_post_id }}">
         <div class="image-preview-wrapper">
             {% for id in val|split(',') %}
                 <span class="image-preview" draggable="true" data-id="{{ id }}">
@@ -32,7 +32,7 @@
                 </span>
             {% endfor %}
         </div>
-        <input type="button" class="button js-trigger--upload" value="{{ __( "Upload image" )}}"/>
+        <input type="button" class="button js-trigger--upload" value="{{ __( "Choose" )}}"/>
         <input type="hidden" class="js-trigger--ids" name="{{ name }}" id="{{ inputId }}" value="{{ val }}">
     </div>
 {% elseif conf.input == 'html' %}

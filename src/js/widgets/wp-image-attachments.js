@@ -4,10 +4,15 @@ Widgets.register('wp-image-attachments', function (el) {
 
     const $ = jQuery;
     const elem = $(el);
+    const multiMode = elem.data('multi_select');
     const input = elem.find('.js-trigger--ids');
-    let newIds = input.val() ? input.val().split(',') : [];
+    let newIds = [];
 
-    console.log(newIds);
+    if (input.val()) {
+        input.val().split(',').forEach(function (val, index) {
+            newIds[index] = parseInt(val);
+        })
+    }
 
     var media_popup;
     var wp_media_post_id = wp.media.model.settings.post.id; // Store the old id
@@ -30,32 +35,39 @@ Widgets.register('wp-image-attachments', function (el) {
 
             // Create the media frame.
             media_popup = wp.media.frames.file_frame = wp.media({
-                title: 'Select one or more images',
+                title: multiMode ? 'Select one or more images' : 'Select or Upload an image',
                 button: {
-                    text: 'Use this images',
+                    text: multiMode ? 'use this images' : 'use this image',
                 },
-                multiple: true	// Set to true to allow multiple files to be selected
+                multiple: multiMode	// Set to true to allow multiple files to be selected
             });
 
-            media_popup.on( 'open', function () {
-                // we filter out everything, that was already selected
-                // kind of hacky fix for now
-                media_popup.state().frame.$el.find('.attachment').each(function () {
-                    if (newIds.indexOf(parseInt($(this).data('id'))) > -1) {
-                        $(this).hide();
-                    }
+            if (multiMode) {
+
+                media_popup.on('open', function () {
+                    // we filter out everything, that was already selected
+                    // kind of hacky fix for now
+                    media_popup.state().frame.$el.find('.attachment').each(function () {
+                        if (newIds.indexOf(parseInt($(this).data('id'))) > -1) {
+                            $(this).hide();
+                        }
+                    });
                 });
-            });
+            }
 
             // When an image is selected, run a callback.
             media_popup.on( 'select', function () {
 
                 const previewArea = elem.find('.image-preview-wrapper');
 
+                if (!multiMode) {
+                    previewArea.empty();
+                    newIds = [];
+                }
+
                 media_popup.state().get('selection').forEach(function (media) {
 
                     let image = media.toJSON();
-                    console.log(image);
 
                     if (newIds.indexOf(image.id) < 0) {
                         let previewUrl = image.sizes.thumbnail.url;

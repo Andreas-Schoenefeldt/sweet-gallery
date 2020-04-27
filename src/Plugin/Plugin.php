@@ -4,6 +4,7 @@
 namespace SweetGallery\Plugin;
 
 
+use SweetGallery\ShortCodes\Codes;
 use SweetGallery\Util\PostUtils;
 use SweetGallery\Util\Template;
 
@@ -23,7 +24,8 @@ class Plugin {
 
         $this->structure = [
             // 'swg_description' => [ 'label' => __('Description'), 'input' => 'html'],
-            'swg_images' =>      [ 'label' => __('Images'), 'input' => 'list_image'] // image upload thx to https://jeroensormani.com/how-to-include-the-wordpress-media-selector-in-your-plugin/
+            'swg_grid_image' =>     [ 'label' => __('Preview Image'), 'input' => 'image' ],
+            'swg_images' =>         [ 'label' => __('Images'), 'input' => 'list_image'], // image upload thx to https://jeroensormani.com/how-to-include-the-wordpress-media-selector-in-your-plugin/
         ];
 
         Template::init(self::plugin_name);
@@ -32,10 +34,7 @@ class Plugin {
         add_action( 'init', array( $this, 'register_gallery_post_type' ) );
 
         // shortcode Area
-        add_action( 'init', function () {
-            // include_once(__DIR__ . '/src/ShortCodes/codes.php');
-            // add_shortcode('whatever', 'fn_whatever');
-        });
+        add_action( 'init', [Codes::class, 'init']);
 
         add_action( "admin_init", array( $this, "admin_init") );
 
@@ -123,7 +122,7 @@ class Plugin {
     public function admin_init () {
         add_meta_box(
             "box_gallery_item_details",
-            __('Gallery Images'),
+            __('Gallery Item Settings'),
             array( $this, 'render_gallery_item_details_box' ),
             self::gallery_post_type_id,
             "normal",
