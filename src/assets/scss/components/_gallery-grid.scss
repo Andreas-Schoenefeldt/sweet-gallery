@@ -1,0 +1,16 @@
+.swg-gallery__preview {
+  cursor: pointer;
+  border-radius: $gallery-grid-border-radius;
+}
+
+.fancy-fade-in {
+  .swg-gallery__preview {
+    opacity: 0;
+    transition: opacity 1s ease-out;
+
+
+    &.visible {
+      opacity: 1;
+    }
+  }
+}

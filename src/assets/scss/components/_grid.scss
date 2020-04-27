@@ -2,7 +2,7 @@
 
   &__row {
     box-sizing: border-box;
-    margin: 0 ($gutter/-2);
+    margin: 0 ($gutter/-2) $gutter;
     display: flex;
   }
 

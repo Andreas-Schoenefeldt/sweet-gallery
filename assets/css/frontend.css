@@ -1,6 +1,6 @@
 .swg-gallery__row {
   box-sizing: border-box;
-  margin: 0 -15px;
+  margin: 0 -15px 30px;
   display: -ms-flexbox;
   display: flex; }
 
@@ -31,3 +31,24 @@
     width: 91.6666666667%; }
   .swg-gallery__col--12 {
     width: 100%; }
+
+.swg-image-wrapper {
+  display: block;
+  position: relative; }
+
+.swg-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; }
+
+.swg-gallery__preview {
+  cursor: pointer;
+  border-radius: 10px; }
+
+.fancy-fade-in .swg-gallery__preview {
+  opacity: 0;
+  transition: opacity 1s ease-out; }
+  .fancy-fade-in .swg-gallery__preview.visible {
+    opacity: 1; }

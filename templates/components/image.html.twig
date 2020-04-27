@@ -1,3 +1,5 @@
 {% if imageId is defined and  imageId != '' %}
-    <img src="{{ wp_get_attachment_image_src(imageId, 'thumbnail') }}" srcset="{{ build_srcset(sizes, imageId) | join(', ') }}" sizes="{{ build_sizes(cols) | join(', ')  }}" class="swg-image" />
+    <span class="swg-image-wrapper" style="padding-bottom: 100%;">
+        <img class="swg-image" alt="{{ alt }}" src="{{ wp_get_attachment_image_src(imageId, 'thumbnail') }}" srcset="{{ build_srcset(sizes, imageId) | join(', ') }}" sizes="{{ build_sizes(cols) | join(', ')  }}"/>
+    </span>
 {% endif %}

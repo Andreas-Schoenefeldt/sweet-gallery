@@ -1,8 +1,8 @@
 import Widgets from 'js-widget-hooks';
+import getJQuery from '../util/jQuery';
 
 Widgets.register('wp-image-attachments', function (el) {
-
-    const $ = jQuery;
+    const $ = getJQuery();
     const elem = $(el);
     const multiMode = elem.data('multi_select');
     const input = elem.find('.js-trigger--ids');

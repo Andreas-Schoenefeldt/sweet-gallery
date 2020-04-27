@@ -33,6 +33,11 @@ class Codes {
 
         $items = get_posts($query);
 
+        for ($i = 0; $i < 3; $i ++ ) {
+            $items = array_merge($items, $items);
+        }
+
+
         return Template::render('gallery_grid.html.twig', [
             'items' => $items,
             'itemCount' => count($items),
