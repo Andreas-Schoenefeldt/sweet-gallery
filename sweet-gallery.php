@@ -17,7 +17,7 @@ use SweetGallery\Plugin\Plugin;
 require __DIR__ . '/vendor/autoload.php';
 
 
-$GLOBALS['sweet_gallery'] = new Plugin();
+$GLOBALS['sweet_gallery'] = new Plugin(__FILE__);
 
 if (is_admin()) {
     $my_admin_page = new Admin(__FILE__);

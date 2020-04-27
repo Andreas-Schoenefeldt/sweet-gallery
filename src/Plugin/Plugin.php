@@ -12,6 +12,9 @@ class Plugin {
 
     const version = '1.0.0';
 
+    // needs to be lower to higher, otherwise the srcset does not work
+    const PREVIEW_IMAGE_SIZES = ['250', '500', '1000', '1500'];
+
     const plugin_name = 'sweet-gallery';
     const gallery_post_type_id = "sweet-gallery";
     const gallery_categories_id = 'sweet-gallery-categories';
@@ -20,15 +23,15 @@ class Plugin {
 
     public $structure;
 
-    public function __construct() {
+    public function __construct($pluginFile) {
 
         $this->structure = [
             // 'swg_description' => [ 'label' => __('Description'), 'input' => 'html'],
             'swg_grid_image' =>     [ 'label' => __('Preview Image'), 'input' => 'image' ],
-            'swg_images' =>         [ 'label' => __('Images'), 'input' => 'list_image'], // image upload thx to https://jeroensormani.com/how-to-include-the-wordpress-media-selector-in-your-plugin/
+            'swg_images' =>         [ 'label' => __('Gallery Images'), 'input' => 'list_image'], // image upload thx to https://jeroensormani.com/how-to-include-the-wordpress-media-selector-in-your-plugin/
         ];
 
-        Template::init(self::plugin_name);
+        Template::init(self::plugin_name, $pluginFile);
 
 
         add_action( 'init', array( $this, 'register_gallery_post_type' ) );
@@ -39,6 +42,12 @@ class Plugin {
         add_action( "admin_init", array( $this, "admin_init") );
 
         add_action( 'save_post', array( $this, "save_product_details") );
+
+        add_action( 'wp_enqueue_scripts', array( Template::class, "includeAssets") );
+
+        foreach (self::PREVIEW_IMAGE_SIZES as $imageSize) {
+            add_image_size ("preview_{$imageSize}x{$imageSize}", $imageSize, $imageSize, true);
+        }
 
 
         // add_filter( 'manage_' . self::gallery_post_type_id . '_posts_columns', array( $this, "handle_gallery_columns") );

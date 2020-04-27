@@ -1,0 +1,3 @@
+{% if imageId is defined and  imageId != '' %}
+    <img src="{{ wp_get_attachment_image_src(imageId, 'thumbnail') }}" srcset="{{ build_srcset(sizes, imageId) | join(', ') }}" sizes="{{ build_sizes(cols) | join(', ')  }}" class="swg-image" />
+{% endif %}

@@ -24,7 +24,11 @@ class Template {
     protected static $cssNamespace;
     protected static $jsNamespace;
 
-    public static function init($namespace) {
+    protected static $pluginFile;
+
+    public static function init($namespace, $pluginFile) {
+
+        self::$pluginFile = $pluginFile;
 
         $cacheDir = Plugin::getCacheDirBase() . 'Templates/';
         $debug = 'debug';
@@ -127,6 +131,48 @@ class Template {
                 return  wp_get_attachment_image($attachment_id, $size, $icon, $attr);
             }
         ));
+
+        self::$twig->addFunction(new TwigFunction(
+            'wp_get_attachment_image_src',
+            function ($attachment_id, $size = 'thumbnail', $icon = false) {
+                return  wp_get_attachment_image_src($attachment_id, $size, $icon)[0];
+            }
+        ));
+
+        self::$twig->addFunction(new TwigFunction(
+            'build_srcset',
+            function ($sizes, $attachment_id) {
+
+                $srcSet = [];
+
+                foreach ($sizes as $size) {
+                    $srcSet[] = wp_get_attachment_image_src($attachment_id, "preview_{$size}x{$size}")[0] . " {$size}w";
+                }
+
+                return $srcSet;
+            }
+        ));
+
+        self::$twig->addFunction(new TwigFunction(
+            'build_sizes',
+            function ($cols) {
+
+                return [ (100 / $cols ) . 'vw' ];
+            }
+        ));
+
+
+        self::$twig->addFunction(new TwigFunction(
+            'dump',
+            function ($val) {
+
+                echo '<pre>';
+                var_dump($val);
+                echo '</pre>';
+            },
+            array('is_safe' => array('html'))
+        ));
+
     }
 
     public static function render($template, $variables = []) {
@@ -139,7 +185,7 @@ class Template {
     public static function includeAssets(){
 
         wp_register_style(self::$cssNamespace, plugins_url('assets/css/frontend.css', self::$pluginFile));
-        wp_register_script(self::$jsNamespace, plugins_url('assets/js/main.js', self::$pluginFile));
+        wp_register_script(self::$jsNamespace, plugins_url('assets/js/frontend.js', self::$pluginFile));
 
         wp_enqueue_style(self::$cssNamespace);
         wp_enqueue_script(self::$jsNamespace);
@@ -148,7 +194,6 @@ class Template {
     public static function includeAdminAssets () {
 
         wp_register_style(self::$cssNamespace . '-admin', plugins_url('assets/css/admin.css', self::$pluginFile), [], Plugin::version);
-
         wp_enqueue_style(self::$cssNamespace . '-admin');
     }
 

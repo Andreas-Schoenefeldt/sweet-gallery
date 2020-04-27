@@ -2,7 +2,8 @@ const path = require('path');
 
 module.exports = {
     entry: {
-        admin: './src/js/admin.js'
+        admin: './src/assets/js/admin.js',
+        frontend: './src/assets/js/frontend.js'
     },
     output: {
         filename: '[name].js',

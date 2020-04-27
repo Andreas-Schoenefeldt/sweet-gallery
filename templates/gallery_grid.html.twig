@@ -1,3 +1,19 @@
-<div>
-    Karmapa Tchenno
+{% set rowCount = (itemCount / cols) | round(0, 'ceil') - 1 %}
+
+<div class="swg-gallery__grid {{ display }} js-widget" data-display="{{ display }}" data-widgets="gallery-grid">
+    {% for i in 0..rowCount %}
+        <div class="swg-gallery__row">
+            {% for c in 0..(cols - 1) %}
+                {% set itemIndex = i * cols + c %}
+                {% if itemIndex < itemCount %}
+                    {% set item = items[itemIndex] %}
+                    <div class="swg-gallery__col swg-gallery__col--{{ 12 / cols }}">
+                        <div class="swg-gallery__preview">
+                            {% include 'components/image.html.twig' with { imageId: gallery_attribute(item.ID, 'swg_grid_image'), sizes: imageSizes, cols: cols, alt: item.post_title } %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endfor %}
 </div>

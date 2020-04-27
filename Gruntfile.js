@@ -17,7 +17,7 @@ module.exports = function(grunt) {
                 files: [
                     {
                         expand: true,     // Enable dynamic expansion.
-                        cwd: 'src/scss/',      // Src matches are relative to this path.
+                        cwd: 'src/assets/scss/', // Src matches are relative to this path.
                         src: ['*.scss'], // Actual pattern(s) to match.
                         dest: 'assets/css/',   // Destination path prefix.
                         ext: '.css',   // Dest filepaths will have this extension.
@@ -46,12 +46,12 @@ module.exports = function(grunt) {
 
         watch: { // tracks changes of the watched files and rerunns the generation commands for development convenience
             scss: {
-                files: ['src/scss/**/*.scss'],
+                files: ['src/assets/scss/**/*.scss'],
                 tasks: ['sass', 'autoprefixer']
             },
 
             js: {
-                files: ['src/js/**/*.js', 'src/js/**/*.jsx'],
+                files: ['src/assets/js/**/*.js', 'src/js/**/*.jsx'],
                 tasks: ['webpack']
             }
         },

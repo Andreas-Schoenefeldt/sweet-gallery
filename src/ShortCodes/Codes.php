@@ -15,10 +15,14 @@ class Codes {
     public static function gallery_grid ($attributes) {
 
         extract( shortcode_atts( array(
-            'order_by' => 'date'
+            'order_by' => 'date',
+            'cols' => 3,
+            'display' => 'fancy-fade-in'
         ), $attributes ) );
 
         /** @var $order_by */
+        /** @var $cols */
+        /** @var $display */
 
         $query = [
             'numberposts' => -1,
@@ -30,7 +34,11 @@ class Codes {
         $items = get_posts($query);
 
         return Template::render('gallery_grid.html.twig', [
-            'items' => $items
+            'items' => $items,
+            'itemCount' => count($items),
+            'cols' => $cols,
+            'display' => $display,
+            'imageSizes' => Plugin::PREVIEW_IMAGE_SIZES
         ]);
 
     }
